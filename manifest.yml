@@ -9,3 +9,7 @@ dependancies:
     - curl
   apt-get:
     - curl
+scripts:
+  init:
+    - mkdir -p database
+    - touch database/state.sqlite
