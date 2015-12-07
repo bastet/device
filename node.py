@@ -105,3 +105,21 @@ if user_response != 'n':
   package_manager_response_error = output.stderr.read()
   print package_manager_response_error
   print package_manager_response
+
+
+print "Installation finished"
+
+# init script
+if manifest.has_key('scripts'):
+  if manifest['scripts'].has_key('init'):
+    if len(manifest['scripts']['init']) > 0:
+      for command in manifest['scripts']['init']:
+        print "Running command: " + command
+        shell_execution = command.split()
+        output = subprocess.Popen(shell_execution, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        shell_response_stdout = output.stdout.read()
+        shell_response_stderr = output.stderr.read()
+        if shell_response_stderr:
+          print shell_response_stderr
+        if shell_response_stdout:
+          print shell_response_stdout
