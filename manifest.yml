@@ -1,7 +1,11 @@
 name: test
 version: 0.1
 dependancies:
-  - curl
-  - git
-  - yolo
-  - cowsay
+  commands:
+    - curl
+    - git
+    - cowsay
+  yum:
+    - curl
+  apt-get:
+    - curl
