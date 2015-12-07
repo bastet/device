@@ -44,34 +44,24 @@ unable_to_satisfy = []
 # loop through the manifest setting up the environment
 if manifest.has_key('dependancies'):
   print "Checking dependancies"
-  cmd = "where" if platform.system() == "Windows" else "which"
-  for dependancy in manifest['dependancies']:
-    if isinstance(dependancy, basestring):
-      if is_installed(dependancy):
-        print (print_tick + dependancy)
-      else:
-        print (print_cross + dependancy)
-        FNULL = open(os.devnull, 'w')
-        output = subprocess.Popen([package_manager, 'provides', dependancy], stdout=subprocess.PIPE, stderr=FNULL)
-        provides = output.stdout.read()
-        found_a_package_to_satisfy_dependancy = False
-        for result in provides.split('\n'):
-          if dependancy in result:
-            package = result.split(' ')[0]
-            to_install.append(package)
-            found_a_package_to_satisfy_dependancy = True
-        if found_a_package_to_satisfy_dependancy == False:
-          unable_to_satisfy.append(dependancy)
-  print "\r\n"
-
-if len(to_install) > 0:
-  print "Packages to install"
-  for package in to_install:
-    print bcolors.GOOD + package + bcolors.RESET
-  print "\r\n"
-
-if len(unable_to_satisfy) > 0:
-  print "Unable to satisfy dependancies:"
-  for application in unable_to_satisfy:
-    print bcolors.BAD + application + bcolors.RESET
-  print "\r\n"
+  if manifest['dependancies'].has_key('commands'):
+    cmd = "where" if platform.system() == "Windows" else "which"
+    for dependancy in manifest['dependancies']['commands']:
+      if isinstance(dependancy, basestring):
+        if is_installed(dependancy):
+          print (print_tick + dependancy)
+        else:
+          print (print_cross + dependancy)
+          FNULL = open(os.devnull, 'w')
+          output = subprocess.Popen([package_manager, 'provides', dependancy], stdout=subprocess.PIPE, stderr=FNULL)
+          provides = output.stdout.read()
+          found_a_package_to_satisfy_dependancy = False
+          for result in provides.split('\n'):
+            if dependancy in result:
+              package = result.split(' ')[0]
+              to_install.append(package)
+              found_a_package_to_satisfy_dependancy = True
+          if found_a_package_to_satisfy_dependancy == False:
+            unable_to_satisfy.append(dependancy)
+    print "\r\n"
+  if manifest['
