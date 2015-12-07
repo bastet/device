@@ -64,4 +64,27 @@ if manifest.has_key('dependancies'):
           if found_a_package_to_satisfy_dependancy == False:
             unable_to_satisfy.append(dependancy)
     print "\r\n"
-  if manifest['
+  if manifest['dependancies'].has_key(package_manager):
+    for package in manifest['dependancies'][package_manager]:
+      FNULL = open(os.devnull, 'w')
+      output = subprocess.Popen([package_manager, 'list', package], stdout=subprocess.PIPE, stderr=FNULL)
+      package_list = output.stdout.read()
+      found_a_package_to_satisfy_request = False
+      for result in package_list.split('\n'):
+        if package in result:
+          to_install.append(package.split('.')[0])
+          found_a_package_to_satisfy_request = True
+      if found_a_package_to_satisfy_request == False:
+        unable_to_satisfy.append(package)
+
+if len(to_install) > 0:
+  print "Packages to install"
+  for package in to_install:
+    print bcolors.GOOD + package + bcolors.RESET
+  print "\r\n"
+
+if len(unable_to_satisfy) > 0:
+  print "Unable to satisfy dependancies:"
+  for application in unable_to_satisfy:
+    print bcolors.BAD + application + bcolors.RESET
+  print "\r\n"
