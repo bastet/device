@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import re
 import platform
@@ -88,3 +89,19 @@ if len(unable_to_satisfy) > 0:
   for application in unable_to_satisfy:
     print bcolors.BAD + application + bcolors.RESET
   print "\r\n"
+
+install_command = package_manager + " install " + " ".join(to_install)
+print "Running the command: " + install_command
+user_response = 'Y'
+#user_response = raw_input('Is this ok? [Y/n]')
+if user_response != 'n':
+  install_list = ['sudo', package_manager, 'install', '-y']
+  if len(to_install) < 2:
+    install_list.append(to_install)
+  else:
+    install_list.extend(to_install)
+  output = subprocess.Popen(install_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  package_manager_response = output.stdout.read()
+  package_manager_response_error = output.stderr.read()
+  print package_manager_response_error
+  print package_manager_response
